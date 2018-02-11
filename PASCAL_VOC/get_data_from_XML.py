@@ -7,8 +7,8 @@ import yaml
 class XML_preprocessor(object):
 
     def __init__(self, data_path: str='',
-                 num_classes: int=20,
-                 conf_file: str='conf/class_id.yml',
+                 num_classes: int=1,
+                 conf_file: str='../conf/class_id.yml',
                  ):
         self.path_prefix = data_path
         self.num_classes = num_classes
@@ -60,7 +60,7 @@ parser = argparse.ArgumentParser(description="Training voxnex with keras")
 parser.add_argument("train_or_test",
                     type=str,
                     help="set train or test")
-parser.add_argument("xml_data_path", default="VOCdevkit/VOC2007/Annotations/",
+parser.add_argument("xml_data_path", default="training_set/annotation/",
                     type=str,
                     help="set xml_data_path")
 parser.add_argument("out_pkl_file", default="VOC2007.pkl",
@@ -68,7 +68,7 @@ parser.add_argument("out_pkl_file", default="VOC2007.pkl",
                     help="set output pkl file name")
 parser.add_argument("-c", "--classes", metavar="classes",
                     type=int,
-                    default=20,
+                    default=1,
                     dest="classes", help="set the number of classes")
 parser.add_argument("-C", "--conf_file", metavar="conf_file",
                     type=str,
@@ -76,12 +76,12 @@ parser.add_argument("-C", "--conf_file", metavar="conf_file",
                     dest="conf file setting", help="set the config file")
 args = parser.parse_args()
 if args.train_or_test == 'train':
+    # print(args.conf_file)
     data = XML_preprocessor(args.xml_data_path,
-                            num_classes=args.classes,
-                            conf_file=args.conf_file).data
+                            num_classes=args.classes).data
     pickle.dump(data,open(args.out_pkl_file, 'wb'))
 elif args.train_or_test == 'test':
-    data = XML_preprocessor('VOCdevkit/VOC2007/Annotations_test/',
+    data = XML_preprocessor('training_set/annotation/',
                             num_classes=args.classes).data
     pickle.dump(data,open('log/VOC2007_test.pkl','wb'))
 
