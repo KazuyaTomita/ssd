@@ -2,6 +2,10 @@
 
 import numpy as np
 import tensorflow as tf
+import sys
+import logging
+import os
+
 
 
 class BBoxUtility(object):
@@ -32,11 +36,21 @@ class BBoxUtility(object):
         self.nms = tf.image.non_max_suppression(self.boxes, self.scores,
                                                 self._top_k,
                                                 iou_threshold=self._nms_thresh)
+        self.logger = self.setup_logger()
         self.sess = tf.Session(config=tf.ConfigProto(device_count={'GPU': 0}))
 
     @property
     def nms_thresh(self):
         return self._nms_thresh
+
+    def setup_logger(self):
+        logger = logging.getLogger()
+        handler = logging.StreamHandler(sys.stdout)
+        handler.setLevel(logging.INFO)
+        logger.addHandler(handler)
+        logger.setLevel(logging.INFO)
+        return logger
+
 
     @nms_thresh.setter
     def nms_thresh(self, value):
@@ -201,19 +215,24 @@ class BBoxUtility(object):
             results: List of predictions for every picture. Each prediction is:
                 [label, confidence, xmin, ymin, xmax, ymax]
         """
+
         mbox_loc = predictions[:, :, :4]
         variances = predictions[:, :, -4:]
         mbox_priorbox = predictions[:, :, -8:-4]
         mbox_conf = predictions[:, :, 4:-8]
+        print("mbox_log is", mbox_loc)
         results = []
         for i in range(len(mbox_loc)):
             results.append([])
             decode_bbox = self.decode_boxes(mbox_loc[i],
                                             mbox_priorbox[i], variances[i])
+            print("decode_box is ", decode_bbox)
             for c in range(self.num_classes):
                 if c == background_label_id:
                     continue
                 c_confs = mbox_conf[i, :, c]
+                print("c_confs", c_confs)
+                print("c_confs class is", c_confs.__class__.__name__)
                 c_confs_m = c_confs > confidence_threshold
                 if len(c_confs[c_confs_m]) > 0:
                     boxes_to_process = decode_bbox[c_confs_m]

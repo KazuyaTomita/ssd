@@ -18,7 +18,7 @@ from ssd_layers import PriorBox
 import tensorflow as tf
 
 
-def SSD300v2(input_shape, num_classes=21, featurte_map=None):
+def SSD300v2(input_shape, num_classes=1, featurte_map=None):
     """SSD300 architecture.
 
     # Arguments
@@ -37,6 +37,7 @@ def SSD300v2(input_shape, num_classes=21, featurte_map=None):
                          name='conv1_1',
                          padding='same',
                          activation='relu')(input_layer)
+        conv1_1.kernel.name.replace(':', '_')
 
         conv1_2 = Conv2D(64, (3, 3),
                          name='conv1_2',
@@ -187,6 +188,7 @@ def SSD300v2(input_shape, num_classes=21, featurte_map=None):
         name += '_{}'.format(num_classes)
 
     with tf.name_scope("conv4_3"):
+        # the only normalization layer of all convolutional predictor
         conv4_3_norm = Normalize(20, name='conv4_3_norm')(conv4_3)
         conv4_3_norm_mbox_loc = Conv2D(num_priors * 4, (3, 3),
                                        name='conv4_3_norm_mbox_loc',
@@ -221,7 +223,7 @@ def SSD300v2(input_shape, num_classes=21, featurte_map=None):
                                      max_size=114.0,
                                      aspect_ratios=[2, 3],
                                      variances=[0.1, 0.1, 0.2, 0.2]
-                                 )(fc7)
+                                     )(fc7)
 
     # Prediction from conv6_2
     num_priors = 6
@@ -267,19 +269,19 @@ def SSD300v2(input_shape, num_classes=21, featurte_map=None):
     if num_classes != 21:
         name += '_{}'.format(num_classes)
     with tf.name_scope("conv8_2"):
-         conv8_2_mbox_conf = Conv2D(num_priors * num_classes, (3, 3),
-                                    padding='same',
-                                    name=name)(conv8_2)
-         conv8_2_mbox_conf_flat = Flatten(name='conv8_2_mbox_conf_flat')(conv8_2_mbox_conf)
-         conv8_2_mbox_loc = Conv2D(num_priors * 4, (3, 3),
+        conv8_2_mbox_conf = Conv2D(num_priors * num_classes, (3, 3),
                                    padding='same',
-                                   name='conv8_2_mbox_loc')(conv8_2)
-         conv8_2_mbox_loc_flat = Flatten(name='conv8_2_mbox_loc_flat')(conv8_2_mbox_loc)
-         conv8_2_mbox_priorbox = PriorBox(img_size, 222.0,
-                                          max_size=276.0,
-                                          aspect_ratios=[2, 3],
-                                          variances=[0.1, 0.1, 0.2, 0.2],
-                                          name='conv8_2_mbox_priorbox')(conv8_2)
+                                   name=name)(conv8_2)
+        conv8_2_mbox_conf_flat = Flatten(name='conv8_2_mbox_conf_flat')(conv8_2_mbox_conf)
+        conv8_2_mbox_loc = Conv2D(num_priors * 4, (3, 3),
+                                  padding='same',
+                                  name='conv8_2_mbox_loc')(conv8_2)
+        conv8_2_mbox_loc_flat = Flatten(name='conv8_2_mbox_loc_flat')(conv8_2_mbox_loc)
+        conv8_2_mbox_priorbox = PriorBox(img_size, 222.0,
+                                         max_size=276.0,
+                                         aspect_ratios=[2, 3],
+                                         variances=[0.1, 0.1, 0.2, 0.2],
+                                         name='conv8_2_mbox_priorbox')(conv8_2)
 
     # Prediction from pool6
     num_priors = 6
@@ -342,16 +344,16 @@ def SSD300v2(input_shape, num_classes=21, featurte_map=None):
         print('{} conf'.format(mbox_conf))
         print('{} priorbox'.format(mbox_priorbox))
 
-    if featurte_map =='conv4_3_norm_mbox_loc_flat':
+    if featurte_map == 'conv4_3_norm_mbox_loc_flat':
         return set_return_model(input_layer=input_layer,
                                 output_layer=conv4_3_norm_mbox_loc_flat)
-    elif featurte_map =='fc7_mbox_loc_flat':
+    elif featurte_map == 'fc7_mbox_loc_flat':
         return set_return_model(input_layer=input_layer,
                                 output_layer=fc7_mbox_loc_flat)
-    elif featurte_map =='conv4_3_norm_mbox_conf_flat':
+    elif featurte_map == 'conv4_3_norm_mbox_conf_flat':
         return set_return_model(input_layer=input_layer,
                                 output_layer=conv4_3_norm_mbox_conf_flat)
-    elif featurte_map =='fc7_mbox_conf_flat':
+    elif featurte_map == 'fc7_mbox_conf_flat':
         return set_return_model(input_layer=input_layer,
                                 output_layer=fc7_mbox_conf_flat)
     predictions = concatenate([mbox_loc,
@@ -363,6 +365,7 @@ def SSD300v2(input_shape, num_classes=21, featurte_map=None):
     print('{} predictions'.format(predictions))
     model = Model(inputs=input_layer, outputs=predictions)
     return model
+
 
 
 def set_return_model(input_layer, output_layer):
