@@ -157,6 +157,7 @@ class PriorBox(Layer):
         num_priors_ = len(self.aspect_ratios)
         prior_boxes = np.concatenate((centers_x, centers_y), axis=1)
         prior_boxes = np.tile(prior_boxes, (1, 2 * num_priors_))
+        # In fact, now box_width is the half length of the ground length and height is same, too.
         prior_boxes[:, ::4] -= box_widths
         prior_boxes[:, 1::4] -= box_heights
         prior_boxes[:, 2::4] += box_widths
