@@ -55,6 +55,7 @@ class XML_preprocessor(object):
         return one_hot_vector
 
 ## example on how to use it
+# python get_data_from_XML.py train ../training_set/annotation/ kitkat.pkl -c 1
 import pickle
 parser = argparse.ArgumentParser(description="Training voxnex with keras")
 parser.add_argument("train_or_test",
@@ -63,7 +64,7 @@ parser.add_argument("train_or_test",
 parser.add_argument("xml_data_path", default="training_set/annotation/",
                     type=str,
                     help="set xml_data_path")
-parser.add_argument("out_pkl_file", default="VOC2007.pkl",
+parser.add_argument("out_pkl_file", default="kitkat.pkl",
                     type=str,
                     help="set output pkl file name")
 parser.add_argument("-c", "--classes", metavar="classes",
