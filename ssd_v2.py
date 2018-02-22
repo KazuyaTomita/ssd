@@ -37,7 +37,7 @@ def SSD300v2(input_shape, num_classes=1, featurte_map=None):
                          name='conv1_1',
                          padding='same',
                          activation='relu')(input_layer)
-        conv1_1.kernel.name.replace(':', '_')
+        # conv1_1.kernel.name.replace(':', '_')
 
         conv1_2 = Conv2D(64, (3, 3),
                          name='conv1_2',
@@ -188,12 +188,14 @@ def SSD300v2(input_shape, num_classes=1, featurte_map=None):
         name += '_{}'.format(num_classes)
 
     with tf.name_scope("conv4_3"):
-        # the only normalization layer of all convolutional predictor
+        # the only normalization layer of all convolutional predictors derived from the original paper
         conv4_3_norm = Normalize(20, name='conv4_3_norm')(conv4_3)
         conv4_3_norm_mbox_loc = Conv2D(num_priors * 4, (3, 3),
                                        name='conv4_3_norm_mbox_loc',
                                        padding='same')(conv4_3_norm)
+         # (None, 1444(= 38 * 38) * num_priors * 4(x, y, width, height) )
         conv4_3_norm_mbox_loc_flat = Flatten(name='conv4_3_norm_mbox_loc_flat')(conv4_3_norm_mbox_loc)
+        # (None, 1444(38 * 38) * num_priors * num_class)
         conv4_3_norm_mbox_conf = Conv2D(num_priors * num_classes, (3, 3),
                                         name=name,
                                         padding='same')(conv4_3_norm)
