@@ -226,9 +226,9 @@ def SSD512(input_shape, num_classes=1, featurte_map=None):
                                         name=name,
                                         padding='same')(conv4_3_norm)
         conv4_3_norm_mbox_conf_flat = Flatten(name='conv4_3_norm_mbox_conf_flat')(conv4_3_norm_mbox_conf)
-        conv4_3_norm_mbox_priorbox = PriorBox(img_size, 21.0,
+        conv4_3_norm_mbox_priorbox = PriorBox(img_size, 35.84,
                                               name='conv4_3_norm_mbox_priorbox',
-                                              max_size=45.0,
+                                              max_size=76.8,
                                               aspect_ratios=[2],
                                               variances=[0.1, 0.1, 0.2, 0.2])(conv4_3_norm)
 
@@ -247,9 +247,9 @@ def SSD512(input_shape, num_classes=1, featurte_map=None):
                               name='fc7_mbox_loc',
                               padding='same')(fc7)
         fc7_mbox_loc_flat = Flatten(name='fc7_mbox_loc_flat')(fc7_mbox_loc)
-        fc7_mbox_priorbox = PriorBox(img_size, 45.0,
+        fc7_mbox_priorbox = PriorBox(img_size, 76.8,
                                      name='fc7_mbox_priorbox',
-                                     max_size=90.0,
+                                     max_size=153.6,
                                      aspect_ratios=[2, 3],
                                      variances=[0.1, 0.1, 0.2, 0.2]
                                      )(fc7)
@@ -268,8 +268,8 @@ def SSD512(input_shape, num_classes=1, featurte_map=None):
                                   name='conv6_2_mbox_loc',
                                   padding='same')(conv6_2)
         conv6_2_mbox_loc_flat = Flatten(name='conv6_2_mbox_loc_flat')(conv6_2_mbox_loc)
-        conv6_2_mbox_priorbox = PriorBox(img_size, 90.0,
-                                         max_size=135.0,
+        conv6_2_mbox_priorbox = PriorBox(img_size, 153.6,
+                                         max_size=230.4,
                                          aspect_ratios=[2, 3],
                                          variances=[0.1, 0.1, 0.2, 0.2],
                                          name='conv6_2_mbox_priorbox')(conv6_2)
@@ -287,8 +287,8 @@ def SSD512(input_shape, num_classes=1, featurte_map=None):
                                   padding='same',
                                   name='conv7_2_mbox_loc')(conv7_2)
         conv7_2_mbox_loc_flat = Flatten(name='conv7_2_mbox_loc_flat')(conv7_2_mbox_loc)
-        conv7_2_mbox_priorbox = PriorBox(img_size, 135.0,
-                                         max_size=180.0,
+        conv7_2_mbox_priorbox = PriorBox(img_size, 230.4,
+                                         max_size=307.2,
                                          aspect_ratios=[2, 3],
                                          variances=[0.1, 0.1, 0.2, 0.2],
                                          name='conv7_2_mbox_priorbox')(conv7_2)
@@ -306,8 +306,8 @@ def SSD512(input_shape, num_classes=1, featurte_map=None):
                                   padding='same',
                                   name='conv8_2_mbox_loc')(conv8_2)
         conv8_2_mbox_loc_flat = Flatten(name='conv8_2_mbox_loc_flat')(conv8_2_mbox_loc)
-        conv8_2_mbox_priorbox = PriorBox(img_size, 180.0,
-                                         max_size=225.0,
+        conv8_2_mbox_priorbox = PriorBox(img_size, 307.2,
+                                         max_size=384.0,
                                          aspect_ratios=[2, 3],
                                          variances=[0.1, 0.1, 0.2, 0.2],
                                          name='conv8_2_mbox_priorbox')(conv8_2)
@@ -326,8 +326,8 @@ def SSD512(input_shape, num_classes=1, featurte_map=None):
                                   padding='same',
                                   name='conv9_2_mbox_loc')(conv9_2)
         conv9_2_mbox_loc_flat = Flatten(name='conv9_2_mbox_loc_flat')(conv9_2_mbox_loc)
-        conv9_2_mbox_priorbox = PriorBox(img_size, 225.0,
-                                         max_size=270.0,
+        conv9_2_mbox_priorbox = PriorBox(img_size, 384.0,
+                                         max_size=460.8,
                                          aspect_ratios=[2, 3],
                                          variances=[0.1, 0.1, 0.2, 0.2],
                                          name='conv9_2_mbox_priorbox')(conv9_2)
@@ -346,8 +346,8 @@ def SSD512(input_shape, num_classes=1, featurte_map=None):
                                   padding='same',
                                   name='conv10_2_mbox_loc')(conv10_2)
         conv10_2_mbox_loc_flat = Flatten(name='conv10_2_mbox_loc_flat')(conv10_2_mbox_loc)
-        conv10_2_mbox_priorbox = PriorBox(img_size, 270.0,
-                                         max_size=315.0,
+        conv10_2_mbox_priorbox = PriorBox(img_size, 460.8,
+                                         max_size=537.6,
                                          aspect_ratios=[2, 3],
                                          variances=[0.1, 0.1, 0.2, 0.2],
                                          name='conv10_2_mbox_priorbox')(conv10_2)
